@@ -12,6 +12,11 @@
 #     name: python3
 # ---
 
+# %% [markdown]
+# # The Beginning
+# These first few rows are my very first attempts at EDA on this data. It took a little while for me
+# to wrap my head around how to structure and use it all.
+
 # %%
 import numpy as np
 import pandas as pd
@@ -24,6 +29,11 @@ import glob
 # %%
 df = pd.read_csv('./data/CE.txt', sep='\t')
 df.describe() # type: ignore
+
+# %% [markdown]
+# ## Pulling in the Predictor Values
+# Below is just a quick loop that stores each `txt` file as its own *DataFrame* object and sticks them
+# all in a dictionary where their **key** is the 'basename' of each file path.
 
 # %%
 cwd = os.getcwd()
@@ -41,24 +51,37 @@ for itm in glob.iglob("./**/*.txt"):
         print(err)
         continue
 
+# %% [markdown]
+# **The cell below is a nice visual of the data structure**. Each table in the dictionary has equal
+# numbers of rows, and a column count that cooresponds to the frequency of samples taken during each
+# pump cycle.
+
 # %%
 count = 0
 for table in list(tables.keys()):
-    # if count > 2:
-    #     break
     print(table)
     print(tables[table].shape)
-    # count += 1
 
 # %% [markdown]
 # ## Structure of the Data
 # **Okay, so the structure of the data is this:**
-# 1. The rows represent 1 cycle of the hydrolic test rig.
+# 1. The rows represent 1 cycle of the hydraulic test rig.
 # 2. The individual txt files are sensor readings, rows represent a cycle, each column is a reading
 #    from that specific sensor.
-# 3. Readings from each table are given in hz, and each cycle lasted 60 seconds. So, a 60hz sensor
-#    provides a 60 column by 2204 row table.
-# 4. "Profile.txt" contains a 5 column by 2204 row table with system states encoded in each column.
+# 3. Readings from each table are given in hz, and each cycle lasted 60 seconds. So, a 1hz sensor
+#    provides a 60 column by 2205 row table.
+# 4. "Profile.txt" contains a 5 column by 2205 row table with system states encoded in each column.
+
+# %% [markdown]
+# ## The Condition Encodings
+# The `profile.txt` table contains the recorded pump conditions for each cycle (row). Below I am
+# intitializing a dictionary to hold basic information about each table. This along with the dictionary
+# of sensor information that follows will help establish a base on which to build out our model
+# functionality.
+#
+# Practically, anytime we need to use this information in the future we can refer to it here, and 
+# if we decide we need to change it later we can do it once here and those changes will propagate
+# through the rest of our program automatically.
 
 # %%
 # Create a dictionary that will translate the values in "Profile.txt" into their text categories 
@@ -93,17 +116,16 @@ encoding = {
         }
 
 # %% [markdown]
-# ### Sensor Frequencies
-# Because the number of columns in each sensor table cooresponds to the frequency of the sensor readings
-# I was able to write a simple dictionary comprehension to capture this information.
-#
-# This will come in handy later if I want to scale the rows in each column proportionally to their
-# original size or in some other table-wise operation.
-
-# %% [markdown]
 # ### Predictor Variables
 # I am going to create another dictionary below that maps the sensor table short hand names to something
-# more readable. As I add features it will be more and more important to keep everything straight.
+# more readable. As I add features it will be more and more important to keep everything straight. To
+# keep things straight it will be important to only refer to common information from a single point.
+#
+# This will help keep naming conventions and data meanings clear and will come in handy later if I 
+# want to scale the rows in each column proportionally in some way that requires using their frequency
+# or respecting their unit of measurement.
+#
+# #### Sensor Frequencies and Other ID Info:
 
 # %%
 sensor_dict = {
