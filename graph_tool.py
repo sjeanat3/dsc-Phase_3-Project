@@ -81,7 +81,7 @@ def make_array(num:int, div:int, opt:str=None, force_col:bool=False, verbose:boo
             v_print(f"success! recursing with {num} and {div_down}")
             return make_array(num, div_down, verbose=verbose)
 
-def hist_grid (numeric_data:pd.DataFrame, *, size:float=2.5, grid_cols:int=4, colors: list=None, **kwargs) -> tuple[Figure, Axes]:
+def hist_grid (numeric_data:pd.DataFrame, *, size:float=2.5, grid_cols:int=4, colors: list=None, **kwargs) -> tuple:
     """This function takes a dataframe of numeric values and returns a plt.subplots() object with an array of histogram plots
 
            Args:

@@ -187,25 +187,25 @@ sensor_dict = {
         "TS1": {
             "name": None,
             "type": "temperature",
-            "unit": "Â°C",
+            "unit": "Ã‚Â°C",
             "samp_rate": 1,
             }, 
         "TS2": {
             "name": None,
             "type": "temperature",
-            "unit": "Â°C",
+            "unit": "Ã‚Â°C",
             "samp_rate": 1,
             }, 
         "TS3": {
             "name": None,
             "type": "temperature",
-            "unit": "Â°C",
+            "unit": "Ã‚Â°C",
             "samp_rate": 1,
             }, 
         "TS4": {
             "name": None,
             "type": "temperature",
-            "unit": "Â°C",
+            "unit": "Ã‚Â°C",
             "samp_rate": 1,
             }, 
         "VS1": {
@@ -383,24 +383,38 @@ for table in tables.keys():
 feature_avg.head()
 
 # %%
-%reload_ext autoreload
-%autoreload 1 
-%aimport features 
-%aimport graph_tool
+# %reload_ext autoreload
+# %autoreload 1 
+# %aimport features 
+# %aimport graph_tool
 
 # %%
 from graph_tool import make_array, hist_grid
 from features import avg_change, table_apply
-tables['TS1']
 
+
+# %% [markdown]
+# ### Average Change Feature
+# Here I am adding a feature that represents the average change in sensor readings over each 60 second
+# cylce. Because we have a bunch of dataframes in a dictionary I wrote a simple helper function to
+# make feature extraction easier. That code as well as the averaging function being applied is in
+# `features.py`.
 
 # %%
 avg_dx = table_apply(tables, avg_change, suffix='dx_avg', axis=1)
 avg_dx.head()
+
+# %% [markdown]
+# ### Graph Tools
+# Below is a grid of histogram data displaying the distributions for each column in the Average Change
+# dataframe. The code and documentation for how to use the hist_grid function is in the graph_tool.py
+# file in this repo.
 
 # %%
 hist_grid(avg_dx, size=2, grid_cols=4, force_col=True)
 plt.show()
 
 
-
+# %%
+hist_grid(feature_avg, grid_cols=3, force_col=True)
+plt.show()
