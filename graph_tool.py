@@ -1,25 +1,67 @@
 from functools import lru_cache
 import numpy as np
 import pandas as pd
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import seaborn as sns
 from tabulate import tabulate
 
-def make_array(num, div, opt=None, verbose=False):
+def make_array(num:int, div:int, opt:str=None, force_col:bool=False, verbose:bool=False):
+    """Function that takes a length and then finds the 'best-fit' array for that number.
+
+        Args:
+            num (int): A length or number of elements to match the 2d array to.
+            div (int): A number of divisions or columns to try to match.
+            opt (str): An optional argument to pass to the guesser. This will bias the output towards returning more or fewer columns.
+                    None : Default option. The guesser will move in both directions decreasing
+                           and increasing the column count until it finds a match this will bias towards the larger column count.
+                    '+'  : will tell the guesser to only increase divs, or column count until a match is found.
+                    '-'  : will tell the guesser to only decrease divs, or column count until a match is found.
+                    TODO:
+                    '+|-': tell the guesser to move in both directions but if it finds two matches at one step to bias towards the larger column count.
+                    '-|+': tell the guesser to move in both directions but if it finds two matches at one step to bias towards the lower column count.
+
+            force_col (bool): When true the div parameter is forced and a grid with 'div' columns is returned.
+            verbose (bool): Turn debugging messages on and off. Deafult off. Turn on if you want it to print what it's doing at each step.
+    """
+
     def v_print(msg_string):
         if verbose is True:
             return print(msg_string)
+
+    v_print(f"Passed arguments:\nnum = {num}, div = {div}, opt = {opt}, forced = {force_col}, verbose = {verbose}")
+    if force_col is True:
+        v_print("Working from forced branch.")
+        rows, rem =  divmod(num, div) 
+        if rem:
+            rows += 1
+        result = []
+        count = 1
+        for row in range(rows): 
+            row_out = []
+            for col in range(div):
+                v_print(f"count: {count}")
+                if count > num:
+                    col = 'x'
+                row_out.append((row, col))
+                count += 1
+            result.append(row_out)
+        return result
 
     rows, rem = divmod(num, div)
     if rem == 0:
         result = []
         for row in range(rows):
-            row_out = []
+            if div == 1:
+                result.append((row,))
+                continue
+            item = []
             for col in range(div):
-                # print(row_out)
-                row_out.append(col)
-            result.append(row_out)
+                # print(item)
+                item.append((row, col))
+            result.append(item)
         return result
 
     v_print(f"{div} does not go into {num} and equal amount of times:")
@@ -39,22 +81,56 @@ def make_array(num, div, opt=None, verbose=False):
             v_print(f"success! recursing with {num} and {div_down}")
             return make_array(num, div_down, verbose=verbose)
 
-# This is all code from a jupyter notebook that needs to be refactored into a useable tool
-def hist_grid (numeric_data, figure_size):
-    numeric_col_names = list(numeric_data.columns)
-    get_col_name = iter(numeric_col_names)
+def hist_grid (numeric_data:pd.DataFrame, *, size:float=2.5, grid_cols:int=4, colors: list=None, **kwargs) -> tuple[Figure, Axes]:
+    """This function takes a dataframe of numeric values and returns a plt.subplots() object with an array of histogram plots
+
+           Args:
+                numeric_data (pandas.DataFrame): Works with a DataFrame object. In order to get a grid back it needs to be a non-prime number.
+                size (float): Determines the size of each plot. Only accepts a single float value. Default is 2.5.
+                grid_cols (int): Designates the desired number of columns. Use keyword arg 'force_col = True' to force desired column count.
+                colors (list): Option to provide a list of colors that fit the Matplotlib color requirements. Defualts to the TABLEAU color dicitonary.
+            Returns:
+                It Returns a tuple of the 'figure' and 'axes' objects unpacked from 'subplots'. To
+                render the output you need to write plt.show() or plt.savefig().
+        """
+    get_col_name = iter(numeric_data.columns)
+    n_columns = len(numeric_data.columns)
+    if not colors:
+        colors = list(mcolors.TABLEAU_COLORS.keys())
+    ind = 0
+
+    while len(colors) < n_columns:
+        colors.append(colors[ind % len(colors)])
+        ind += 1
     color = iter(colors)
-    num_of_columns = len(numeric_col_names)
-    base_array = np.shape(make_array(num_of_columns, 4))
-    fig, ax = plt.subplots(base_array[0], base_array[1], figsize=(figure_size))
+
+    base_array = make_array(n_columns, grid_cols, **kwargs)
+    shape = [*np.shape(base_array)]
+    pos_list = []
+    if len(shape) > 2:
+        shape.pop(-1)
+        [pos_list.extend(row) for row in base_array]
+        # print(f"shape is {shape}\nshape length = {len(shape)}")
+        # print(pos_list)
+    else:
+        pos_list = base_array
+        # print(f"shape is {shape}\nshape length = {len(shape)}")
+        # print(pos_list)
+
+    fig_height, fig_width = [shape[i] * size if(len(shape) > 1 or i < 1) else size * i  for i in range(2)]
+    # print(f"figure width: {fig_width}\nfigure height: {fig_height}")
+    fig, ax = plt.subplots(*shape, figsize=(fig_width, fig_height))
     fig.set_tight_layout(tight=True)
-    for row, obj in enumerate(base_array):
-        for col in obj:
-            name = next(get_col_name)
-            ax[row, col].hist(x=numeric_data[name], bins=16, color=next(color), alpha=.4)
-            ax[row, col].set_title(name)
-        # print(row, col, next(column_gen), next(color))
+    for pos in pos_list:
+        # print(pos)
+        if 'x' in pos:
+            continue
+        name = next(get_col_name)
+        ax[pos].hist(x=numeric_data[name], bins=16, color=next(color), alpha=.4)
+        ax[pos].set_title(name)
+    # print(row, col, next(column_gen), next(color))
     return (fig, ax)
+
 
 
 class Data_Grid():

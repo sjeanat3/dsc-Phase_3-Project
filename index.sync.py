@@ -1,13 +1,14 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.3.4
+#       jupytext_version: 1.14.0
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (learn-env)
 #     language: python
 #     name: python3
 # ---
@@ -186,25 +187,25 @@ sensor_dict = {
         "TS1": {
             "name": None,
             "type": "temperature",
-            "unit": "°C",
+            "unit": "Â°C",
             "samp_rate": 1,
             }, 
         "TS2": {
             "name": None,
             "type": "temperature",
-            "unit": "°C",
+            "unit": "Â°C",
             "samp_rate": 1,
             }, 
         "TS3": {
             "name": None,
             "type": "temperature",
-            "unit": "°C",
+            "unit": "Â°C",
             "samp_rate": 1,
             }, 
         "TS4": {
             "name": None,
             "type": "temperature",
-            "unit": "°C",
+            "unit": "Â°C",
             "samp_rate": 1,
             }, 
         "VS1": {
@@ -232,6 +233,7 @@ sensor_dict = {
             "samp_rate": 1,
             }
         }
+
 
 # %% [markdown]
 # ### Adding Names Programmatically
@@ -272,6 +274,7 @@ def rename_cols(data_dict=None, input_str=None, numbers=True,  *args, **kwargs):
         data_dict[key]['name'] = f"{base}_{name}{num}"
 
     return None
+
 
 # %%
 rename_cols(sensor_dict, "", True)
@@ -376,39 +379,28 @@ plt.show()
 feature_avg = pd.DataFrame()
 for table in tables.keys():
     col_name = "avg_"
-   feature_avg[table] = tables[table].apply(np.mean, axis=1) 
+    feature_avg[table] = tables[table].apply(np.mean, axis=1) 
 feature_avg.head()
 
 # %%
-from graph_tool import make_array
+%reload_ext autoreload
+%autoreload 1 
+%aimport features 
+%aimport graph_tool
 
 # %%
-colors = list(mcolors.TABLEAU_COLORS.keys())
-while len(colors) <  len(feature_avg.columns):
-    rand_index = np.random.randint(0, len(colors))
-    colors.append(colors[rand_index])
+from graph_tool import make_array, hist_grid
+from features import avg_change, table_apply
+tables['TS1']
+
 
 # %%
-def hist_grid (numeric_data, figure_size):
-    numeric_col_names = list(numeric_data.columns)
-    get_col_name = iter(numeric_col_names)
-    color = iter(colors)
-    num_of_columns = len(numeric_col_names)
-    base_array = make_array(num_of_columns, 4)
-    fig, ax = plt.subplots(np.shape(base_array)[0], np.shape(base_array)[1], figsize=(figure_size))
-    fig.set_tight_layout(tight=True)
-    for row, obj in enumerate(base_array):
-        for col in obj:
-            name = next(get_col_name)
-            ax[row, col].hist(x=numeric_data[name], bins=16, color=next(color), alpha=.4)
-            ax[row, col].set_title(name)
-        # print(row, col, next(column_gen), next(color))
-    return (fig, ax)
+avg_dx = table_apply(tables, avg_change, suffix='dx_avg', axis=1)
+avg_dx.head()
 
 # %%
-test = feature_avg.drop(['TS4'], axis=1)
-test.head()
-
-# %%
-hist_grid(test,(10, 10))
+hist_grid(avg_dx, size=2, grid_cols=4, force_col=True)
 plt.show()
+
+
+
