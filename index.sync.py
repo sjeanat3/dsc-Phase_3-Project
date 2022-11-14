@@ -393,7 +393,7 @@ feature_avg.head()
 
 # %%
 from graph_tool import make_array, hist_grid
-from features import avg_change, table_apply
+from features import avg_change, table_apply, thirds_apply
 
 
 # %% [markdown]
@@ -421,3 +421,30 @@ plt.show()
 # %%
 hist_grid(feature_avg, grid_cols=3, force_col=True)
 plt.show()
+
+# %%
+stddev_feature = table_apply(tables, np.std, suffix="std", axis=1)
+stddev_feature.head()
+
+# %%
+hist_grid(stddev_feature, size=3, grid_cols=3, force_col=True)
+plt.show()
+
+# %%
+tables['PS1'].iloc[0][0]
+
+# %%
+thirds_test = table_apply(tables, thirds_apply, thirds_func=np.std, suffix="std")
+thirds_test.head()
+
+# %%
+pressure_dict = {"pressure": tables['TS1']}
+std_press = table_apply(pressure_dict, thirds_apply, thirds_func=np.std, suffix="std")
+std_press.head()
+
+# %%
+test = pd.DataFrame(data=np.linspace(0,2204,2205, dtype=int), columns=["a"])
+col = pd.DataFrame(data=np.linspace(1,2205,2205, dtype=int), columns=["b"])
+
+test.merge(col, left_index=True, right_index=True)
+test.head()

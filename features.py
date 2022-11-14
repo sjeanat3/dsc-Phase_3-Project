@@ -5,7 +5,7 @@ Feature list:
     * Min/Max
     * Averages in 3rds of total time
 """
-from typing import Callable
+from typing import Callable 
 import pandas as pd
 import numpy as np
 
@@ -14,10 +14,20 @@ def avg_change(row):
     dx_avg = dx_sum/(len(row)- 1)
     return dx_avg
 
-def divide_row_into_thrids():
+def thirds_apply(row, *, thirds_func:Callable, suffix:str="", name:str):
     """Divides a row into thrids."""
-
-    pass
+    cursor = 0
+    data = []
+    row_size = int(len(row)/3)
+    for third in range(3):
+        val = []
+        for itm in range(row_size):
+            val.append(row[cursor])
+            cursor += 1
+        data.append(thirds_func(val))
+    output = pd.Series(data=data, index=[f"{suffix}{name}_1", f"{suffix}{name}_2", f"{suffix}{name}_3"]) 
+    return output 
+    # return type(row_size)
 
 
 def table_apply(data:dict, func:Callable, suffix:str="", **kwargs):
@@ -31,10 +41,17 @@ def table_apply(data:dict, func:Callable, suffix:str="", **kwargs):
 
         Returns:
             The aggregated data from each table as columns in a new DataFrame object."""
-
+    
+    if suffix:
+        suffix = f"{suffix}_"
+        kwargs.update({'suffix':suffix})
     tbl_list = list(data.keys())
-    output = pd.DataFrame()
+    output = pd.DataFrame(data=np.linspace(0,2204,2205, dtype=int), columns=['index'])
     for key in tbl_list:
-        output[f"{suffix}_{key}"] = data[key].apply(func, **kwargs)
+        print(kwargs)
+        kwargs.update({'name':key})
+        result = data[key].apply(func, **kwargs)
+        output.join(result)
     return output
 
+ 

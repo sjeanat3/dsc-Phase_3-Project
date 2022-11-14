@@ -8,5 +8,9 @@ rows, rem = divmod(number, cols)
 if rem:
     rows += 1
 shape = (rows, cols)
-print(shape)
 
+suffix = ""
+if suffix:
+    print('yes')
+else:
+    print('no')
