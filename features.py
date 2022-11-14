@@ -9,10 +9,13 @@ from typing import Callable
 import pandas as pd
 import numpy as np
 
-def avg_change(row):
+def feature_wrap(data, *, wrap_func:Callable, name:str, suffix:str):
+    return pd.Series(wrap_func(data), index=[f"{suffix}{name}"])
+
+def avg_change(row, *, name:str, suffix:str):
     dx_sum = sum([row[i+1] - row[i] for i in range(len(row)) if i < 59])
     dx_avg = dx_sum/(len(row)- 1)
-    return dx_avg
+    return pd.Series(data=dx_avg, index=[f"{suffix}{name}"])
 
 def thirds_apply(row, *, thirds_func:Callable, suffix:str="", name:str):
     """Divides a row into thrids."""
@@ -46,12 +49,12 @@ def table_apply(data:dict, func:Callable, suffix:str="", **kwargs):
         suffix = f"{suffix}_"
         kwargs.update({'suffix':suffix})
     tbl_list = list(data.keys())
-    output = pd.DataFrame(data=np.linspace(0,2204,2205, dtype=int), columns=['index'])
+    output = pd.DataFrame(index=np.linspace(0,2204,2205, dtype=int))
     for key in tbl_list:
         print(kwargs)
         kwargs.update({'name':key})
         result = data[key].apply(func, **kwargs)
-        output.join(result)
+        output = output.join(result)
     return output
 
  

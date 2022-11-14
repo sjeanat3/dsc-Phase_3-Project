@@ -190,25 +190,25 @@ sensor_dict = {
         "TS1": {
             "name": None,
             "type": "temperature",
-            "unit": "Ã‚Â°C",
+            "unit": "Ãƒâ€šÃ‚Â°C",
             "samp_rate": 1,
             }, 
         "TS2": {
             "name": None,
             "type": "temperature",
-            "unit": "Ã‚Â°C",
+            "unit": "Ãƒâ€šÃ‚Â°C",
             "samp_rate": 1,
             }, 
         "TS3": {
             "name": None,
             "type": "temperature",
-            "unit": "Ã‚Â°C",
+            "unit": "Ãƒâ€šÃ‚Â°C",
             "samp_rate": 1,
             }, 
         "TS4": {
             "name": None,
             "type": "temperature",
-            "unit": "Ã‚Â°C",
+            "unit": "Ãƒâ€šÃ‚Â°C",
             "samp_rate": 1,
             }, 
         "VS1": {
@@ -393,7 +393,7 @@ feature_avg.head()
 
 # %%
 from graph_tool import make_array, hist_grid
-from features import avg_change, table_apply, thirds_apply
+from features import avg_change, table_apply, thirds_apply, feature_wrap
 
 
 # %% [markdown]
@@ -423,7 +423,7 @@ hist_grid(feature_avg, grid_cols=3, force_col=True)
 plt.show()
 
 # %%
-stddev_feature = table_apply(tables, np.std, suffix="std", axis=1)
+stddev_feature = table_apply(tables, feature_wrap, wrap_func=np.std, suffix="std", axis=1)
 stddev_feature.head()
 
 # %%
@@ -434,17 +434,21 @@ plt.show()
 tables['PS1'].iloc[0][0]
 
 # %%
-thirds_test = table_apply(tables, thirds_apply, thirds_func=np.std, suffix="std")
+thirds_test = table_apply(tables, thirds_apply, axis=1, thirds_func=np.std, suffix="std")
 thirds_test.head()
 
 # %%
-pressure_dict = {"pressure": tables['TS1']}
-std_press = table_apply(pressure_dict, thirds_apply, thirds_func=np.std, suffix="std")
-std_press.head()
+hist_grid(thirds_test)
+plt.show()
 
 # %%
-test = pd.DataFrame(data=np.linspace(0,2204,2205, dtype=int), columns=["a"])
-col = pd.DataFrame(data=np.linspace(1,2205,2205, dtype=int), columns=["b"])
+import pickle
+thirds_test.to_pickle('./features/std_3rds.pkl')
+stddev_feature.to_pickle('./features/std_dev.pkl')
+avg_dx.to_pickle('./features/avg_change.pkl')
+feature_avg.to_pickle('./features/cycle_mean.pkl')
+with open('./features/cond_encoding.pkl', 'wb') as enc_file:
+    pickle.dump(encoding, enc_file)
 
-test.merge(col, left_index=True, right_index=True)
-test.head()
+with open('./features/sensor_info.pkl', 'wb') as sen_file:
+    pickle.dump(sensor_dict, sen_file)
