@@ -127,6 +127,9 @@ encoding = {
 # or respecting their unit of measurement.
 #
 # #### Sensor Frequencies and Other ID Info:
+# This is here for reference, but I think more or less static dictionaries should be saved out as json
+# files. Then we can load them in as dictionary objects at the beginning of our final notebook, so the
+# definitions are not cluttering things up too much.
 
 # %%
 sensor_dict = {
@@ -302,7 +305,7 @@ df.head()
 # each 60 second test cycle. That means we can graph these cycles to get a sense of the testing setup
 # we will be trying to predict.
 #
-# Below I quickly iterate through the columns. Plotting each test components status for each cycle.
+# Below I quickly iterate through the columns. Plotting each test component status for each cycle.
 
 # %%
 import matplotlib.colors as mcolors

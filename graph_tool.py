@@ -126,7 +126,7 @@ def hist_grid (numeric_data:pd.DataFrame, *, size:float=2.5, grid_cols:int=4, co
         if 'x' in pos:
             continue
         name = next(get_col_name)
-        ax[pos].hist(x=numeric_data[name], bins=16, color=next(color), alpha=.4)
+        ax[pos].hist(x=numeric_data[name], bins=16, density=False, color=next(color), alpha=.4)
         ax[pos].set_title(name)
     # print(row, col, next(column_gen), next(color))
     return (fig, ax)
