@@ -190,25 +190,25 @@ sensor_dict = {
         "TS1": {
             "name": None,
             "type": "temperature",
-            "unit": "Ãƒâ€šÃ‚Â°C",
+            "unit": "ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°C",
             "samp_rate": 1,
             }, 
         "TS2": {
             "name": None,
             "type": "temperature",
-            "unit": "Ãƒâ€šÃ‚Â°C",
+            "unit": "ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°C",
             "samp_rate": 1,
             }, 
         "TS3": {
             "name": None,
             "type": "temperature",
-            "unit": "Ãƒâ€šÃ‚Â°C",
+            "unit": "ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°C",
             "samp_rate": 1,
             }, 
         "TS4": {
             "name": None,
             "type": "temperature",
-            "unit": "Ãƒâ€šÃ‚Â°C",
+            "unit": "ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°C",
             "samp_rate": 1,
             }, 
         "VS1": {
@@ -452,3 +452,13 @@ with open('./features/cond_encoding.pkl', 'wb') as enc_file:
 
 with open('./features/sensor_info.pkl', 'wb') as sen_file:
     pickle.dump(sensor_dict, sen_file)
+
+# %%
+thirds_avg = table_apply(tables, thirds_apply, axis=1, thirds_func=np.mean, suffix="mean")
+
+# %%
+thirds_dx = table_apply(tables, thirds_apply, axis=1, thirds_func=avg_change, suffix="mean_dx")
+
+# %%
+thirds_dx.to_pickle('./features/dx_3rds.pkl')
+thirds_avg.to_pickle('./features/avg_3rds.pkl')
