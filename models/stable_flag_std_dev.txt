@@ -1,0 +1,20 @@
+Model_Output---------------------------------------------------------------Feature type: std_dev
+Target Variable: stable_flagLogistic Regression Test Accuracy: 0.8700906344410876
+Logistic Regression Best Params: {'lr__C': 1.0, 'lr__penalty': 'l1', 'lr__solver': 'liblinear'}
+
+Decision Trees Test Accuracy: 0.9335347432024169
+Decision Trees Best Params: {'dtree__criterion': 'entropy', 'dtree__max_depth': 6, 'dtree__min_samples_leaf': 1, 'dtree__min_samples_split': 2}
+
+Random Forest Test Accuracy: 0.9637462235649547
+Random Forest Best Params: {'rf__max_depth': 6, 'rf__min_samples_leaf': 2, 'rf__min_samples_split': 2}
+
+K-Nearest Neighbors Test Accuracy: 0.9546827794561934
+K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 6, 'knn__weights': 'distance'}
+
+Support Vector Machines Test Accuracy: 0.9305135951661632
+Support Vector Machines Best Params: {'svm__C': 6, 'svm__kernel': 'rbf'}
+
+XGBoost Test Accuracy: 0.9697885196374623
+XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 5, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 100, 'xgb__subsample': 1.0}
+
+end of file...

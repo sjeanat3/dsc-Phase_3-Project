@@ -15,7 +15,7 @@ def feature_wrap(data, *, wrap_func:Callable, name:str, suffix:str):
 def avg_change(row, *, name:str="", suffix:str=""):
     dx_sum = sum([row[i+1] - row[i] for i in range(len(row)) if i < len(row)-1])
     dx_avg = dx_sum/(len(row)- 1)
-    return pd.Series(data=dx_avg, index=[f"{suffix}{name}"])
+    return dx_avg
 
 def thirds_apply(row, *, thirds_func:Callable, suffix:str="", name:str):
     """Divides a row into thrids."""

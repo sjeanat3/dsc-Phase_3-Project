@@ -443,6 +443,8 @@ plt.show()
 
 # %%
 import pickle
+
+# %%
 thirds_test.to_pickle('./features/std_3rds.pkl')
 stddev_feature.to_pickle('./features/std_dev.pkl')
 avg_dx.to_pickle('./features/avg_change.pkl')
@@ -462,3 +464,35 @@ thirds_dx = table_apply(tables, thirds_apply, axis=1, thirds_func=avg_change, su
 # %%
 thirds_dx.to_pickle('./features/dx_3rds.pkl')
 thirds_avg.to_pickle('./features/avg_3rds.pkl')
+
+# %%
+df = pd.read_pickle('./features/dx_3rds.pkl')
+
+# %%
+df.info()
+
+# %%
+sub_table = {}
+count = 0
+max = 2
+for k, v in tables.items():
+    if count < max:
+        sub_table.update({k:v})
+        count += 1
+    else:
+        break
+sub_table
+
+# %%
+thirds_dx = table_apply(tables, thirds_apply, axis=1, thirds_func=avg_change, suffix="mean_dx")
+
+# %%
+thirds_dx.head()
+
+# %%
+thirds_dx.to_pickle('./features/dx_3rds.pkl')
+df = pd.read_pickle('./features/dx_3rds.pkl')
+df.head()
+
+# %%
+print("test")
