@@ -1,0 +1,20 @@
+Model_Output---------------------------------------------------------------Feature type: avg_change
+Target Variable: Hydraulic_accumulator_barLogistic Regression Test Accuracy: 0.7009063444108762
+Logistic Regression Best Params: {'lr__C': 1.0, 'lr__penalty': 'l1', 'lr__solver': 'liblinear'}
+
+Decision Trees Test Accuracy: 0.9093655589123867
+Decision Trees Best Params: {'dtree__criterion': 'entropy', 'dtree__max_depth': 6, 'dtree__min_samples_leaf': 3, 'dtree__min_samples_split': 2}
+
+Random Forest Test Accuracy: 0.8912386706948641
+Random Forest Best Params: {'rf__max_depth': 6, 'rf__min_samples_leaf': 1, 'rf__min_samples_split': 3}
+
+K-Nearest Neighbors Test Accuracy: 0.8187311178247734
+K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 6, 'knn__weights': 'distance'}
+
+Support Vector Machines Test Accuracy: 0.8882175226586103
+Support Vector Machines Best Params: {'svm__C': 5, 'svm__kernel': 'rbf'}
+
+XGBoost Test Accuracy: 0.9637462235649547
+XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 5, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 50, 'xgb__subsample': 1.0}
+
+end of file...

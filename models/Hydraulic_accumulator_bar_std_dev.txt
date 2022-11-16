@@ -1,0 +1,20 @@
+Model_Output---------------------------------------------------------------Feature type: std_dev
+Target Variable: Hydraulic_accumulator_barLogistic Regression Test Accuracy: 0.6042296072507553
+Logistic Regression Best Params: {'lr__C': 1.0, 'lr__penalty': 'l1', 'lr__solver': 'liblinear'}
+
+Decision Trees Test Accuracy: 0.7099697885196374
+Decision Trees Best Params: {'dtree__criterion': 'entropy', 'dtree__max_depth': 6, 'dtree__min_samples_leaf': 4, 'dtree__min_samples_split': 2}
+
+Random Forest Test Accuracy: 0.8398791540785498
+Random Forest Best Params: {'rf__max_depth': 6, 'rf__min_samples_leaf': 1, 'rf__min_samples_split': 4}
+
+K-Nearest Neighbors Test Accuracy: 0.8429003021148036
+K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 4, 'knn__weights': 'distance'}
+
+Support Vector Machines Test Accuracy: 0.8096676737160121
+Support Vector Machines Best Params: {'svm__C': 6, 'svm__kernel': 'rbf'}
+
+XGBoost Test Accuracy: 0.9154078549848943
+XGBoost Best Params: {'xgb__learning_rate': 0.2, 'xgb__max_depth': 6, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 150, 'xgb__subsample': 1.0}
+
+end of file...

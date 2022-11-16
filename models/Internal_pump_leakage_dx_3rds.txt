@@ -1,0 +1,20 @@
+Model_Output---------------------------------------------------------------Feature type: dx_3rds
+Target Variable: Internal_pump_leakageLogistic Regression Test Accuracy: 0.6072507552870091
+Logistic Regression Best Params: {'lr__C': 1.0, 'lr__penalty': 'l2', 'lr__solver': 'liblinear'}
+
+Decision Trees Test Accuracy: 0.6918429003021148
+Decision Trees Best Params: {'dtree__criterion': 'entropy', 'dtree__max_depth': 4, 'dtree__min_samples_leaf': 6, 'dtree__min_samples_split': 2}
+
+Random Forest Test Accuracy: 0.6978851963746223
+Random Forest Best Params: {'rf__max_depth': 6, 'rf__min_samples_leaf': 5, 'rf__min_samples_split': 2}
+
+K-Nearest Neighbors Test Accuracy: 0.6465256797583081
+K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 6, 'knn__weights': 'uniform'}
+
+Support Vector Machines Test Accuracy: 0.6404833836858006
+Support Vector Machines Best Params: {'svm__C': 6, 'svm__kernel': 'rbf'}
+
+XGBoost Test Accuracy: 0.7945619335347432
+XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 5, 'xgb__min_child_weight': 2, 'xgb__n_estimators': 150, 'xgb__subsample': 1.0}
+
+end of file...

@@ -1,0 +1,20 @@
+Model_Output---------------------------------------------------------------Feature type: std_dev
+Target Variable: Valve_ConditionLogistic Regression Test Accuracy: 0.5861027190332326
+Logistic Regression Best Params: {'lr__C': 1.0, 'lr__penalty': 'l1', 'lr__solver': 'liblinear'}
+
+Decision Trees Test Accuracy: 0.9274924471299094
+Decision Trees Best Params: {'dtree__criterion': 'entropy', 'dtree__max_depth': 6, 'dtree__min_samples_leaf': 2, 'dtree__min_samples_split': 6}
+
+Random Forest Test Accuracy: 0.8670694864048338
+Random Forest Best Params: {'rf__max_depth': 6, 'rf__min_samples_leaf': 2, 'rf__min_samples_split': 2}
+
+K-Nearest Neighbors Test Accuracy: 0.7522658610271903
+K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 4, 'knn__weights': 'distance'}
+
+Support Vector Machines Test Accuracy: 0.8096676737160121
+Support Vector Machines Best Params: {'svm__C': 6, 'svm__kernel': 'rbf'}
+
+XGBoost Test Accuracy: 0.9607250755287009
+XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 3, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 100, 'xgb__subsample': 1.0}
+
+end of file...
