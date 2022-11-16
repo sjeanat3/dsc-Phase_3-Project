@@ -39,7 +39,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
-from modeling import MultiModel
+from multimodel import MultiModel
 
 # %%
 run "../graph_tool.py"
@@ -98,3 +98,27 @@ def pool_func(args):
 for args in args_list:
     msg, duration = pool_func(args)
     print(f"{msg} took {duration} to compute.")
+
+# %%
+test_summary = []
+for text in iglob("../models/*.txt"):
+    with open(text, 'r') as log:
+        output = log.readlines()
+        index = 0
+        test_summary.append("-" * 60 + "\n")
+        for line in output:
+            if not index:
+                test_summary.append(line.split("-")[-1] + "\n")
+            if index == 1:
+                test_summary.append(line.split("L")[0] + "\n")
+            if "{" in line:
+                 continue
+            if line[0] in ["K", "X"]:
+                test_summary.append(f"{line}\n")
+            index += 1
+
+# %%
+with open('../models/test_summary.txt', 'w') as sum:
+    sum.writelines(test_summary)
+            
+

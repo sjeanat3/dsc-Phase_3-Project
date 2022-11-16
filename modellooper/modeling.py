@@ -119,10 +119,10 @@ class MultiModel:
                                        n_jobs = -1)
 
 
-        self.grids = [lr_grid_search, dtree_grid_search, rf_grid_search, knn_grid_search, svm_grid_search, xgb_grid_search]
+        self.grids = {"lr_grid_search":lr_grid_search, "dtree_grid_search":dtree_grid_search, "rf_grid_search":rf_grid_search, "knn_grid_search":knn_grid_search, "svm_grid_search":svm_grid_search, "xgb_grid_search":xgb_grid_search}
 
     def fit_model(self):
-        for i in self.grids:
+        for i in self.grids.values():
             i.fit(self.model_X_train, self.model_y_train)
         return self
 
@@ -132,13 +132,12 @@ class MultiModel:
                      2: 'Random Forest', 3: 'K-Nearest Neighbors', 
                      4: 'Support Vector Machines', 5: 'XGBoost'}
         
-        file_lines.append("Model_Output")
-        file_lines.append("---------------------------------------------------------------")
-        file_lines.append(f"Feature type: {self.features}\nTarget Variable: {self.target}")
-        for i, model in enumerate(self.grids):
-            file_lines.append('{} Test Accuracy: {}\n'.format(grid_dict[i],\
-            model.score(self.model_X_test, self.model_y_test)))
+        file_lines.append("Model_Output\n")
+        file_lines.append("---------------------------------------------------------------\n")
+        file_lines.append(f"Feature type: {self.features}\nTarget Variable: {self.target}\n")
+        for i, model in enumerate(self.grids.values()):
+            file_lines.append("{} Test Accuracy: {}\n".format(grid_dict[i], model.score(self.model_X_test, self.model_y_test)))
             file_lines.append('{} Best Params: {}\n'.format(grid_dict[i], model.best_params_))
             file_lines.append('\n')
-        file_lines.append("end of file...")
+        file_lines.append("end of file...\n")
         return file_lines
