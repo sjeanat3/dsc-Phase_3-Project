@@ -1,20 +1,9 @@
-Model_Output---------------------------------------------------------------Feature type: avg_change
-Target Variable: Cooler_ConditionLogistic Regression Test Accuracy: 0.8338368580060423
-Logistic Regression Best Params: {'lr__C': 1.0, 'lr__penalty': 'l1', 'lr__solver': 'liblinear'}
-
-Decision Trees Test Accuracy: 0.9879154078549849
-Decision Trees Best Params: {'dtree__criterion': 'entropy', 'dtree__max_depth': 6, 'dtree__min_samples_leaf': 1, 'dtree__min_samples_split': 2}
-
-Random Forest Test Accuracy: 0.9848942598187311
-Random Forest Best Params: {'rf__max_depth': 6, 'rf__min_samples_leaf': 2, 'rf__min_samples_split': 2}
+Feature type: avg_change
+Target Variable: Cooler_Condition
 
 K-Nearest Neighbors Test Accuracy: 0.9244712990936556
 K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 4, 'knn__weights': 'uniform'}
 
-Support Vector Machines Test Accuracy: 0.9607250755287009
-Support Vector Machines Best Params: {'svm__C': 5, 'svm__kernel': 'rbf'}
-
 XGBoost Test Accuracy: 0.9879154078549849
 XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 4, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 100, 'xgb__subsample': 0.5}
 
-end of file...

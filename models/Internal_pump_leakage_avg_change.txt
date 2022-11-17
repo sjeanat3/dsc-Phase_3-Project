@@ -1,20 +1,9 @@
-Model_Output---------------------------------------------------------------Feature type: avg_change
-Target Variable: Internal_pump_leakageLogistic Regression Test Accuracy: 0.5196374622356495
-Logistic Regression Best Params: {'lr__C': 1.0, 'lr__penalty': 'l2', 'lr__solver': 'liblinear'}
-
-Decision Trees Test Accuracy: 0.716012084592145
-Decision Trees Best Params: {'dtree__criterion': 'gini', 'dtree__max_depth': 6, 'dtree__min_samples_leaf': 6, 'dtree__min_samples_split': 2}
-
-Random Forest Test Accuracy: 0.6586102719033232
-Random Forest Best Params: {'rf__max_depth': 6, 'rf__min_samples_leaf': 2, 'rf__min_samples_split': 2}
+Feature type: avg_change
+Target Variable: Internal_pump_leakage
 
 K-Nearest Neighbors Test Accuracy: 0.6978851963746223
 K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 6, 'knn__weights': 'distance'}
 
-Support Vector Machines Test Accuracy: 0.6253776435045317
-Support Vector Machines Best Params: {'svm__C': 5, 'svm__kernel': 'rbf'}
-
 XGBoost Test Accuracy: 0.8549848942598187
 XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 5, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 50, 'xgb__subsample': 1.0}
 
-end of file...

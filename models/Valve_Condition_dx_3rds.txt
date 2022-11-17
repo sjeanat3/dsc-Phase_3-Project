@@ -1,20 +1,9 @@
-Model_Output---------------------------------------------------------------Feature type: dx_3rds
-Target Variable: Valve_ConditionLogistic Regression Test Accuracy: 0.45317220543806647
-Logistic Regression Best Params: {'lr__C': 0.1, 'lr__penalty': 'l1', 'lr__solver': 'liblinear'}
-
-Decision Trees Test Accuracy: 0.459214501510574
-Decision Trees Best Params: {'dtree__criterion': 'gini', 'dtree__max_depth': 1, 'dtree__min_samples_leaf': 1, 'dtree__min_samples_split': 2}
-
-Random Forest Test Accuracy: 0.46827794561933533
-Random Forest Best Params: {'rf__max_depth': 4, 'rf__min_samples_leaf': 1, 'rf__min_samples_split': 4}
+Feature type: dx_3rds
+Target Variable: Valve_Condition
 
 K-Nearest Neighbors Test Accuracy: 0.4471299093655589
 K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 6, 'knn__weights': 'distance'}
 
-Support Vector Machines Test Accuracy: 0.46827794561933533
-Support Vector Machines Best Params: {'svm__C': 2, 'svm__kernel': 'rbf'}
-
 XGBoost Test Accuracy: 0.48338368580060426
 XGBoost Best Params: {'xgb__learning_rate': 0.2, 'xgb__max_depth': 6, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 100, 'xgb__subsample': 0.5}
 
-end of file...
