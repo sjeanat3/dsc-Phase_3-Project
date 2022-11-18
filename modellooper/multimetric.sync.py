@@ -80,7 +80,7 @@ def top_confusion(filename:Union[BinaryIO, str], model_i:Tuple, ax_row):
     model = load(filename)
     model_names = ["KNN", "XGBoost"]
     for index in range(2):
-        plot_confusion_matrix(model.grids[model_i[index]], model.model_X_test, model.model_y_test, ax=ax_row[index], cmap='gnuplot')
+        plot_confusion_matrix(model.grids[model_i[index]], model.model_X_test, model.model_y_test, ax=ax_row[index], cmap='ocean')
         ax_row[index].set_title(model_names[index])
     return plt.show()
 

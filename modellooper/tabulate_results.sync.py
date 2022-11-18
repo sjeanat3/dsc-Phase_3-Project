@@ -18,6 +18,12 @@ import os
 from tabulate import tabulate
 from glob import iglob
 import pandas as pd
+from joblib import dump, load
+import pickle
+from typing import Union, BinaryIO
+
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # %%
 with open("../models/test_summary.txt", "r") as file:
@@ -25,10 +31,10 @@ with open("../models/test_summary.txt", "r") as file:
 for line in summary:
     if line.startswith("\n"):
         summary.remove(line)
-print(*summary)
+
 
 # %%
-table = [["Target", "Feature", "KNN Accuracry", "XGBoost Accuracy"]]
+table = [["Feature", "Target", "KNN Accuracry", "XGBoost Accuracy"]]
 output = []
 for line in range(len(summary)):
     if summary[line].startswith("F"):
@@ -40,8 +46,8 @@ for line in range(len(summary)):
 print(tabulate(table, headers='firstrow', tablefmt='github'))
 
 # %% [markdown]
-# | Target     | Feature                   |   KNN Accuracry |   XGBoost Accuracy |
-# |   :---:    |          :---:            |      :---:      |        :---:       |
+# | Feature    | Target                    |   KNN Accuracry |   XGBoost Accuracy |
+# |------------|---------------------------|-----------------|--------------------|
 # | avg_3rds   | Cooler_Condition          |        1        |           1        |
 # | avg_change | Cooler_Condition          |        0.924471 |           0.987915 |
 # | cycle_mean | Cooler_Condition          |        1        |           1        |
@@ -74,10 +80,144 @@ print(tabulate(table, headers='firstrow', tablefmt='github'))
 # | std_dev    | Valve_Condition           |        0.752266 |           0.960725 |
 
 # %% [markdown]
-# | Target     | Feature                   |   KNN Accuracry |   XGBoost Accuracy |
+# | Feature    |   Target                  |   KNN Accuracry |   XGBoost Accuracy |
 # |   :---:    |          :---:            |      :---:      |        :---:       |
-# | dx_3rds    | Cooler_Condition          |        0.927492 |           0.996979 |
+# | St   | Cooler_Condition          |        0.996979 |           0.996979 |
 # | avg_3rds   | Hydraulic_accumulator_bar |        0.963746 |           0.987915 |
 # | avg_3rds   | Internal_pump_leakage     |        0.990937 |           0.996979 |
 # | avg_3rds   | stable_flag               |        0.966767 |           0.963746 |
 # | avg_3rds   | Valve_Condition           |        0.984894 |           0.987915 |
+
+# %%
+run "../src/RegularModel.py"
+
+# %%
+model = load("../models/Internal_pump_leakage_avg_3rds.pkl")
+
+# %%
+feature_importances = model.xgb_grid_search.best_estimator_.steps[1][1].feature_importances_
+feature_columns = model._X_train.columns
+fi_list = list(filter(lambda x : x[1] > 0, zip(feature_columns, feature_importances)))
+fi_list.sort(reverse=True, key = lambda x : x[1])
+for col, num in fi_list:
+#     if count == 3:
+#         print("\n")
+#         count = 0
+    print(f"{col}: {num:5f}")
+#     count += 1
+
+# %%
+def feature_importance(file_path:str):
+    model = load(file_path)
+    feature_importances = model.xgb_grid_search.best_estimator_.steps[1][1].feature_importances_
+    feature_columns = model._X_train.columns
+    fi_list = list(filter(lambda x : x[1] > 0, zip(feature_columns, feature_importances)))
+    fi_list.sort(reverse=True, key = lambda x : x[1])
+    return fi_list
+
+
+# %%
+final_pairs = ['Cooler_Condition_std_3rds', 'Hydraulic_accumulator_bar_avg_3rds', 'Internal_pump_leakage_avg_3rds', 'stable_flag_avg_3rds', 'Valve_Condition_avg_3rds']
+
+
+# %%
+# files = [file for file in iglob("../models/*.pkl") if os.path.basename(file)[:-4] in final_pairs]
+
+def get_feature_counts(sensor_info:str="./**/sensor_info.pkl", model_search:str="", top:int=5):
+    with open(sensor_info, "rb") as file:
+        sensors = pickle.load(file)
+        col_names = sensors.keys() 
+    files = [file for file in iglob(model_search)]
+    feature_counts= {}
+    for file in files:
+        pair = os.path.basename(file)[:-4]
+        fi = feature_importance(file)[:top]
+    #     print(f"\n{pair}:")
+        for name, itm in fi:
+            name = name.split("_")
+            feature = [word for word in name if word in col_names]
+    #         print(f"{next(feature)}: {itm:.5f}")
+            if feature[0] in feature_counts.keys():
+                feature_counts[feature[0]] += 1
+                continue
+            feature_counts.update({feature[0]: 1})
+
+    features = list(feature_counts.items())
+    features.sort(reverse=True, key=lambda x : x[1])
+    feature_ids, feature_count = [[k for k, v in features],
+                 [v for k, v in features]]
+    return (feature_ids, feature_count)
+
+
+# %%
+targets = ['Cooler_Condition*', 'Hydraulic_accumulator_bar*', 'Internal_pump_leakage*', 'stable_flag*', 'Valve_Condition*']
+
+# %%
+ax_num = (divmod(num, 2) for num in range(10))
+fig, ax = plt.subplots(3, 2, figsize=(12,8), tight_layout="tight")
+for model in targets:
+    ax_i = ax[next(ax_num)]
+    path = f"../models/{model}.pkl"
+    x, y = get_feature_counts("../features/sensor_info.pkl", path, top=8)
+#     print(x, y)
+    sns.barplot(x=x, y=y, ax=ax_i)
+    plt.suptitle("Top Sensors for")
+    ax_i.set_title(model)
+    # plt.yticks(range(0, 30, 2))
+plt.show()
+
+
+# %%
+def get_feature_avg(sensor_info:str="./**/sensor_info.pkl", model_search:str="", top:int=5):
+    with open(sensor_info, "rb") as file:
+        sensors = pickle.load(file)
+        col_names = sensors.keys() 
+    files = [file for file in iglob(model_search)]
+    feature_counts= {}
+    for file in files:
+        pair = os.path.basename(file)[:-4]
+        fi = feature_importance(file)[:top]
+    #     print(f"\n{pair}:")
+        for name, itm in fi:
+            name = name.split("_")
+#             feature = [word for word in name if word in col_names]
+            feature = [name[ind] for ind in range(len(name)) if name[ind].isupper()]
+            if not name[-1] == feature[0]:
+                feature[0] = (feature[0], name[-1])
+#             feature = [name[ind+1] for ind in range(len(name)) if name[ind].isupper()]
+#             print(f"{next(feature)}: {itm:.5f}")
+            if feature[0] in feature_counts.keys():
+                feature_counts[feature[0]].append(itm)
+                continue
+            feature_counts.update({feature[0]: [itm]})
+
+    features = list(feature_counts.items())
+    features.sort(reverse=True, key=lambda x : x[1])
+    feature_ids, feature_arr = [[k for k, v in features],
+                 [v for k, v in features]]
+    feature_avg = []
+    for arr in feature_arr:
+        feature_avg.append(np.mean(arr))
+    return feature_ids, feature_avg
+
+
+# %%
+name, avg = get_feature_avg("../features/sensor_info.pkl", "../models/*.pkl", top=10)
+
+
+# %%
+def name_filter(x):
+    if isinstance(x, tuple):
+        return int(x[1])
+    return 0
+
+
+# %%
+period = name
+x = list(zip(period, avg))
+x.sort(reverse=True, key=lambda x : x[1])
+zero, one, two, three = [[(zero, avg) for zero, avg in x if len(zero) < 2],
+                         [(one, avg) for one, avg in x if one[1] == '1'],
+                         [(two, avg) for two, avg in x if two[1] == '2'],
+                         [(three, avg) for three, avg in x if three[1] == '3']]
+
