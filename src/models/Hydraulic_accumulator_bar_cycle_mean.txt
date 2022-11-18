@@ -1,0 +1,9 @@
+Feature type: cycle_mean
+Target Variable: Hydraulic_accumulator_bar
+
+K-Nearest Neighbors Test Accuracy: 0.9637462235649547
+K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 4, 'knn__weights': 'distance'}
+
+XGBoost Test Accuracy: 0.9697885196374623
+XGBoost Best Params: {'xgb__learning_rate': 0.2, 'xgb__max_depth': 4, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 150, 'xgb__subsample': 0.5}
+

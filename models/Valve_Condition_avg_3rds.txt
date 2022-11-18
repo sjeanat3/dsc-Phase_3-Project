@@ -1,9 +1,0 @@
-Feature type: avg_3rds
-Target Variable: Valve_Condition
-
-K-Nearest Neighbors Test Accuracy: 0.9848942598187311
-K-Nearest Neighbors Best Params: {'knn__metric': 'euclidean', 'knn__n_neighbors': 1, 'knn__weights': 'uniform'}
-
-XGBoost Test Accuracy: 0.9879154078549849
-XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 4, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 100, 'xgb__subsample': 0.5}
-

@@ -1,9 +1,0 @@
-Feature type: std_dev
-Target Variable: stable_flag
-
-K-Nearest Neighbors Test Accuracy: 0.9546827794561934
-K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 6, 'knn__weights': 'distance'}
-
-XGBoost Test Accuracy: 0.9697885196374623
-XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 5, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 100, 'xgb__subsample': 1.0}
-

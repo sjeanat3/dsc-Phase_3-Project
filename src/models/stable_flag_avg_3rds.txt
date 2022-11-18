@@ -1,0 +1,9 @@
+Feature type: avg_3rds
+Target Variable: stable_flag
+
+K-Nearest Neighbors Test Accuracy: 0.9667673716012085
+K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 1, 'knn__weights': 'uniform'}
+
+XGBoost Test Accuracy: 0.9637462235649547
+XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 5, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 150, 'xgb__subsample': 0.5}
+

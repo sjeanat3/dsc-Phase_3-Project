@@ -1,9 +1,0 @@
-Feature type: std_3rds
-Target Variable: Internal_pump_leakage
-
-K-Nearest Neighbors Test Accuracy: 0.9214501510574018
-K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 3, 'knn__weights': 'distance'}
-
-XGBoost Test Accuracy: 0.9697885196374623
-XGBoost Best Params: {'xgb__learning_rate': 0.3, 'xgb__max_depth': 3, 'xgb__min_child_weight': 2, 'xgb__n_estimators': 150, 'xgb__subsample': 1.0}
-

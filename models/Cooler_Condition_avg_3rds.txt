@@ -1,9 +1,0 @@
-Feature type: avg_3rds
-Target Variable: Cooler_Condition
-
-K-Nearest Neighbors Test Accuracy: 1.0
-K-Nearest Neighbors Best Params: {'knn__metric': 'euclidean', 'knn__n_neighbors': 1, 'knn__weights': 'uniform'}
-
-XGBoost Test Accuracy: 1.0
-XGBoost Best Params: {'xgb__learning_rate': 0.1, 'xgb__max_depth': 1, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 50, 'xgb__subsample': 1.0}
-

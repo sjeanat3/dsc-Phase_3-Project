@@ -1,9 +1,0 @@
-Feature type: avg_change
-Target Variable: Valve_Condition
-
-K-Nearest Neighbors Test Accuracy: 0.4652567975830816
-K-Nearest Neighbors Best Params: {'knn__metric': 'manhattan', 'knn__n_neighbors': 6, 'knn__weights': 'distance'}
-
-XGBoost Test Accuracy: 0.5045317220543807
-XGBoost Best Params: {'xgb__learning_rate': 0.1, 'xgb__max_depth': 5, 'xgb__min_child_weight': 1, 'xgb__n_estimators': 150, 'xgb__subsample': 1.0}
-
