@@ -256,10 +256,8 @@ sns.barplot(x=three_x, y=three_y, palette=color_dict, ax=ax[1,1])
 plt.show()
 
 # %%
-col = 2
-itms = 12
-[divmod(num, col) for num in range(itms)]
-row, rem = divmod(itms, col)
-print(row, rem)
-shape = (row + bool(rem), col)
-shape
+name, avg = get_feature_avg("../features/sensor_info.pkl", "../models/*.pkl", top=5)
+name
+
+# %%
+

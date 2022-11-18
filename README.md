@@ -20,21 +20,21 @@ Each row represents one full cycle and each column represents one sample (in thi
 readings from the temperatue sensor. To create features from this data we will need to come up with
 methods for aggregating each row of the sensor data into a single column of data.
 
-##### Raw Table (ex: TS1.txt)
-|          |1s |2s |3s |.. |60s|
-| :---:    |---|---|---|---|---|
-| cycle[0]:| 0 | 1 | 2 |...|59 |
-| cycle[1]:| 0 | 1 | 2 |...|59 |
+##### Raw Table 
+|  cycle   |1s |2s |3s |.. |60s|
+|  :---:   |---|---|---|---|---|
+|  first  :| 0 | 1 | 2 |...|59 |
+| second  :| 0 | 1 | 2 |...|59 |
 |   ...    |...|...|...|...|...|
-| cycle[-1]| 0 | 1 | 2 |...|59 |
-----------------
+|   last  :| 0 | 1 | 2 |...|59 |
+
 ##### Taking the average of each row:
-|          |1s-60s | << |
-| :---:    | :---: |:---|
-| cycle[0]:| avg[0]| << |
-| cycle[1]:| avg[1]| << |
-|   ...    |  ...  | << |
-| cycle[-1]|avg[-1]| << |
+|  cycle   |  1s-60s  | aggregation |
+|  :---:   |   :---:  |    :---:    |   
+|  first : |  avg[0]  |    <<<<<    |
+| second : |  avg[1]  |    <<<<<    |
+|   ...    |    ...   |    <<<<<    |
+|   last : |  avg[-1] |    <<<<<    |
  
 * If we apply this "pattern" to `TS1.txt` we end up with one feature column: *the mean temperature reading
 from the sensor for all cycles*. 
