@@ -27,10 +27,10 @@ class RegularModel:
         _xgb_pipe = Pipeline([('scaler', StandardScaler()),
                              ('xgb', XGBClassifier(random_state = self.rs))])
 
-        self.param_range = [1, 2, 3, 4, 5, 6]
-        self.param_range_fl = [1.0, 0.5, 0.1]
-        self.n_estimators = [50, 100, 150]
-        self.learning_rates = [.1, .2, .3]
+        param_range = [1, 2, 3, 4, 5, 6]
+        param_range_fl = [1.0, 0.5, 0.1]
+        n_estimators = [50, 100, 150]
+        learning_rates = [.1, .2, .3]
 
         knn_param_grid = [{'knn__n_neighbors': param_range,
                            'knn__weights': ['uniform', 'distance'],
@@ -75,8 +75,7 @@ class RegularModel:
             rep_list.append('{} Test Accuracy: {}\n'.format(grid_dict[i],\
             model.score(self._X_test, self._y_test)))
             rep_list.append('{} Best Params: {}\n'.format(grid_dict[i], model.best_params_))
-            refeature = [(name[ind], name[ind+1]) for ind in range(len(name)) if name[ind].isupper()]
-    #p_list.append('\n')
+            rep_list.append('\n')
         if how == "file":
             if not where:
                 raise ValueError("You must pass a string with filename and path to use 'file' output method.")

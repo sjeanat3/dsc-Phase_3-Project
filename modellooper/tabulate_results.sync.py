@@ -16,13 +16,15 @@
 # %%
 import os
 from tabulate import tabulate
-from glob import iglob
+from glob import glob, iglob
 import pandas as pd
 from joblib import dump, load
 import pickle
 from typing import Union, BinaryIO
 
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+std_colors = mcolors.TABLEAU_COLORS
 import seaborn as sns
 
 # %%
@@ -82,7 +84,7 @@ print(tabulate(table, headers='firstrow', tablefmt='github'))
 # %% [markdown]
 # | Feature    |   Target                  |   KNN Accuracry |   XGBoost Accuracy |
 # |   :---:    |          :---:            |      :---:      |        :---:       |
-# | St   | Cooler_Condition          |        0.996979 |           0.996979 |
+# | std_3rds   | Cooler_Condition          |        0.996979 |           0.996979 |
 # | avg_3rds   | Hydraulic_accumulator_bar |        0.963746 |           0.987915 |
 # | avg_3rds   | Internal_pump_leakage     |        0.990937 |           0.996979 |
 # | avg_3rds   | stable_flag               |        0.966767 |           0.963746 |
@@ -94,17 +96,6 @@ run "../src/RegularModel.py"
 # %%
 model = load("../models/Internal_pump_leakage_avg_3rds.pkl")
 
-# %%
-feature_importances = model.xgb_grid_search.best_estimator_.steps[1][1].feature_importances_
-feature_columns = model._X_train.columns
-fi_list = list(filter(lambda x : x[1] > 0, zip(feature_columns, feature_importances)))
-fi_list.sort(reverse=True, key = lambda x : x[1])
-for col, num in fi_list:
-#     if count == 3:
-#         print("\n")
-#         count = 0
-    print(f"{col}: {num:5f}")
-#     count += 1
 
 # %%
 def feature_importance(file_path:str):
@@ -153,19 +144,38 @@ def get_feature_counts(sensor_info:str="./**/sensor_info.pkl", model_search:str=
 targets = ['Cooler_Condition*', 'Hydraulic_accumulator_bar*', 'Internal_pump_leakage*', 'stable_flag*', 'Valve_Condition*']
 
 # %%
-ax_num = (divmod(num, 2) for num in range(10))
-fig, ax = plt.subplots(3, 2, figsize=(12,8), tight_layout="tight")
-for model in targets:
-    ax_i = ax[next(ax_num)]
-    path = f"../models/{model}.pkl"
-    x, y = get_feature_counts("../features/sensor_info.pkl", path, top=8)
-#     print(x, y)
-    sns.barplot(x=x, y=y, ax=ax_i)
-    plt.suptitle("Top Sensors for")
-    ax_i.set_title(model)
-    # plt.yticks(range(0, 30, 2))
-plt.show()
+def plot_feature_counts(feature_search:Union[list, str], plot_columns:int=2, figsize=(10,10)):
+    targets = [*feature_search]
+    num_items = len(targets)
+    print(num_items)
+    if plot_columns > num_items:
+        plot_columns = num_items
+    if len(targets) < 2:
+        fig, ax = plt.subplots(figsize=figsize, tight_layout="tight")
+    else:
+        rows, rem = divmod(num_items, plot_columns)
+        shape = [rows + bool(rem), plot_columns]
+        print(shape)
+        fig, ax = plt.subplots(*shape, figsize=figsize, tight_layout="tight")
 
+    for item, model in enumerate(targets):
+        ax_i = ax
+        if num_items > 2:
+            print(divmod(item, plot_columns))
+            ax_i = ax[divmod(item, plot_columns)]
+        elif num_items == 2:
+            ax_i = ax[item]
+            print(type(ax_i))
+        x, y = get_feature_counts("../features/sensor_info.pkl", model, top=5) # TODO - Generalize
+        ax_i.set_title(model[10:-5])
+        sns.barplot(x=x, y=y, ax=ax_i, palette=color_dict)
+
+    return fig, ax
+
+# %%
+plot_feature_counts(feature_search=['../models/Cooler_Condition*.pkl', '../models/Valve_Condition*.pkl', '../models/Hydraulic_accumulator_bar*.pkl', '../models/stable_flag*.pkl', '../models/Internal_pump_leakage*.pkl'])
+plt.show()
+# divmod(6, 2)
 
 # %%
 def get_feature_avg(sensor_info:str="./**/sensor_info.pkl", model_search:str="", top:int=5):
@@ -202,22 +212,54 @@ def get_feature_avg(sensor_info:str="./**/sensor_info.pkl", model_search:str="",
 
 
 # %%
-name, avg = get_feature_avg("../features/sensor_info.pkl", "../models/*.pkl", top=10)
-
-
-# %%
-def name_filter(x):
-    if isinstance(x, tuple):
-        return int(x[1])
-    return 0
-
+name, avg = get_feature_avg("../features/sensor_info.pkl", "../models/*.pkl", top=5)
 
 # %%
 period = name
 x = list(zip(period, avg))
 x.sort(reverse=True, key=lambda x : x[1])
-zero, one, two, three = [[(zero, avg) for zero, avg in x if len(zero) < 2],
+zero, one, two, three = [[(zero, avg) for zero, avg in x if len(zero[0]) < 2],
                          [(one, avg) for one, avg in x if one[1] == '1'],
                          [(two, avg) for two, avg in x if two[1] == '2'],
                          [(three, avg) for three, avg in x if three[1] == '3']]
 
+# %%
+zero_x, zero_y = [[name for name, avg in zero],
+                  [avg for name, avg in zero]]
+one_x, one_y = [[name[0] for name, avg in one],
+                  [avg for name, avg in one]]
+two_x, two_y = [[name[0] for name, avg in two],
+                  [avg for name, avg in two]]
+three_x, three_y = [[name[0] for name, avg in three],
+                  [avg for name, avg in three]]
+
+
+# %%
+with open("../features/sensor_info.pkl", "rb") as binary:
+    sensors = pickle.load(binary)
+columns = list(sensors.keys())
+colors = sns.cubehelix_palette(n_colors=17, start=2, gamma=.5, dark=.7, light=.6, hue=2, rot=9)
+color_dict = {col: color for col, color in zip(columns, colors)}
+colors
+
+# %%
+fig, ax = plt.subplots(2, 2, figsize=(12, 10), tight_layout='tight')
+fig.suptitle("Feature Effect Averages", fontsize=16)
+ax[0,0].set_title("Full Test Cycle")
+ax[0,1].set_title("First 20 Seconds")
+ax[1,0].set_title("Middle 20 Seconds")
+ax[1,1].set_title("Last 20 Seconds")
+sns.barplot(x=zero_x, y=zero_y, palette=color_dict, ax=ax[0,0])
+sns.barplot(x=one_x, y=one_y,  palette=color_dict, ax=ax[0,1])
+sns.barplot(x=two_x, y=two_y, palette=color_dict, ax=ax[1,0])
+sns.barplot(x=three_x, y=three_y, palette=color_dict, ax=ax[1,1])
+plt.show()
+
+# %%
+col = 2
+itms = 12
+[divmod(num, col) for num in range(itms)]
+row, rem = divmod(itms, col)
+print(row, rem)
+shape = (row + bool(rem), col)
+shape

@@ -296,6 +296,7 @@ rename_cols(sensor_dict, "", True)
 # %%
 target_cols = list(encoding.keys())
 df = pd.read_csv('./data/profile.txt', sep='\t', header=None, names=target_cols)
+df.to_pickle("./target_variables/full_set.pkl")
 print(df.shape)
 df.head()
 
@@ -317,6 +318,7 @@ x_axis = df.index
 for col in range(len(target_cols)):
     ax[col].plot(x_axis, df[target_cols[col]], c=colors[col])
     ax[col].set_title(target_cols[col])
+plt.savefig("./images/cycle_routines.png")
 plt.show()
 
 # %% [markdown]
